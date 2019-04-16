@@ -16,9 +16,12 @@ class LocationController extends Controller
         return response()->json(['status_code'=>1000,'data'=>$locations , 'message'=>null],200);
     }
 
+    public function store(Request $request)
+    {
+        $locations = ResLocation::create($request->all());
+        return response()->json(['status_code'=>1000,'data'=>null , 'message'=>'Location Saved Successfully'],200);
+    }
 
-    // 1- add user location
-    // 2- list user locations
-    // 3- add res location 
-    // 4- get list of restaurants locations + center of province
+
+   
 }

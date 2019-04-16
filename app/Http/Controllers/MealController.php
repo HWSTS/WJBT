@@ -18,10 +18,10 @@ class MealController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->image;
-            $name = 'IMG'.'-'.time().'.'.'jpg';
+            $name = 'MEAL'.'-'.time().'.'.'jpg';
             $destinationPath = base_path('public/images/');
             $image->move($destinationPath, $name);
-            $imgurl = 'http://192.168.1.171/Wajabat/public/images/'.$name;
+            $imgurl = 'https://wajabatapp.net/images/'.$name;
             $uuid = Uuid::generate()->string;
         $meal = Meal::create(['res_id'=>$request->res_id,
                                 'meal_id'=>$uuid,
@@ -54,7 +54,7 @@ class MealController extends Controller
         ->join('sidedish as s','s.meal_id', '=','meal.meal_id')
         ->select('meal.res_id','meal.meal_id','meal.name as meal_name','meal.price','meal.img_url as meal_image','meal.num_orders','meal.num_person','meal.delv_time','meal.discount','meal.ar_ing','r.name as res_name','r.img_url as res_image','s.pepsi','s.juice','s.entree','s.sauce','s.saop','s.fries')
         ->orderByRaw('RAND()')
-        ->paginate(5);
+        ->paginate(20);
         return response()->json($meals,200);
     }
 
@@ -73,7 +73,7 @@ class MealController extends Controller
         $meal = Meal::where('category',$category)
                     ->orderBy('num_orders', 'desc')
                     ->paginate(20);
-        return response()->json(['status_code'=>1000,'data'=>$meal , 'message'=>null],200);
+        return response()->json($meal,200);
     }
 
     public function update(Request $request)
@@ -87,10 +87,12 @@ class MealController extends Controller
         return response()->json(['status_code'=>1000,'data'=>null , 'message'=>'Updated Successfully'],200);
     }
 
-    public function delete($id)
+    public function delete(Request $request)
     {
-        $meal = Meal::where('id',$id)->delete();
+        $meal = Meal::where('meal_id',$request->meal_id)->first();
         if($meal){
+            $meal = Meal::where('meal_id',$request->meal_id)->delete();
+            $side = Sidedish::where('meal_id',$request->meal_id)->delete();
             return response()->json(['status_code'=>1000,'data'=>null , 'message'=>'Deleted Successfully'],200);
         }else{
             return response()->json(['status_code'=>2000,'data'=>null , 'message'=>'Meal Not Exist'],200);

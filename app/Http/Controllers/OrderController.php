@@ -58,9 +58,25 @@ class OrderController extends Controller
         ->join('meal as m','m.meal_id', '=','order.meal_id')
         ->select('order.id','order.oid','order.price','order.qty','order.subtotal','order.status','order.user_location','order.user_number','order.created_at','m.name')
         ->orderByRaw('created_at','asc')
-        ->paginate(10);
+        ->paginate(30);
         
         return response()->json($orders,200);
+    }
+
+    public function account($uid, $fromdate, $todate)
+    {
+        $account = DB::table('order')
+                    ->select(DB::raw('COUNT(order.id) as count, Sum(order.subtotal) as sum'),'status')
+                    ->whereBetween('created_at',[$fromdate, $todate])
+                    ->whereIn('status',[1,2,3,4,5])
+                    ->groupBy('status')
+                    ->get();
+
+
+         return response()->json($account,200);
+
+                    // only response work
+                    //resapi/account/24342424/2019-4-6/2019-4-7
     }
 
 

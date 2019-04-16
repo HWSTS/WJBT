@@ -30,8 +30,7 @@ class FavController extends Controller
         ->join('restaurant as r','r.res_id', '=','meal.res_id')
         ->join('sidedish as s','s.meal_id', '=','meal.meal_id')
         ->select('meal.res_id','meal.meal_id','meal.name as meal_name','meal.price','meal.img_url as meal_image','meal.num_orders','meal.num_person','meal.delv_time','meal.discount','meal.ar_ing','r.name as res_name','r.img_url as res_image','s.pepsi','s.juice','s.entree','s.sauce','s.saop','s.fries')
-        ->orderByRaw('created_at')
-        ->paginate(5);
+        ->paginate(20);
         return response()->json($meals,200);
     }
 

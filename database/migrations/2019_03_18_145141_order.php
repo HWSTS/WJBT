@@ -24,7 +24,7 @@ class Order extends Migration
         $table->string('subtotal',20);
         $table->string('user_location');
         $table->string('user_number',20);
-        $table->unsignedInteger('status')->default(0);
+        $table->unsignedInteger('status')->default(1);
         $table->unsignedInteger('pay_status')->default(0);
         $table->timestamps();
         });

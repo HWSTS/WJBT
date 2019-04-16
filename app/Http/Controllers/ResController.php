@@ -11,11 +11,18 @@ class ResController extends Controller
 {
     
 
-    public function Store(Request $request)
+    public function store(Request $request)
     {
-        $uuid = Uuid::generate()->string;
-        $res = Restaurant::create(array_merge(['res_id' => $uuid],$request->all()));
-        return response()->json(['status_code'=>1000,'data'=>$uuid,'message'=>"Created Successfully"],200);
+        if ($request->hasFile('image')) {
+            $image = $request->image;
+            $name = 'RES'.'-'.time().'.'.'jpg';
+            $destinationPath = base_path('public/images/');
+            $image->move($destinationPath, $name);
+            $imgurl = 'https://wajabatapp.net/images/'.$name;
+            $uuid = Uuid::generate()->string;
+            $res = Restaurant::create(array_merge(['res_id' => $uuid,'img_url'=>$imgurl],$request->all()));
+            return response()->json(['status_code'=>1000,'data'=>$uuid,'message'=>"Created Successfully"],200);
+        }
     }
 
     public function login(Request $request)
@@ -24,7 +31,7 @@ class ResController extends Controller
         if($res){
             if($res->password == $request->password){
 
-                return response()->json(['status_code'=>1000,'data'=>$res->res_id,'message'=>"Logged Successfully"],200);
+                return response()->json(['status_code'=>1000,'uid'=>$res->res_id,'province'=>$res->province,'message'=>"Logged Successfully"],200);
 
             }else{
 
@@ -46,6 +53,14 @@ class ResController extends Controller
                   ->orderByRaw('RAND()')
                      ->paginate(5);
         return response()->json($resList,200);
+    }
+
+
+    public function search($name)
+    {
+        $res = Restaurant::where('name', 'like', '%' . $name . '%')
+                            ->get();
+         return response()->json($res,200);
     }
 
 }

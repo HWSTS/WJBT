@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'By Mada Tech Co.';
 });
 
 
@@ -32,11 +32,23 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 });
 
 $router->group(['prefix' => 'resapi'], function () use ($router) {
-    $router->post('login','UserController@login');
+    $router->post('login','ResController@login');
     $router->get('orders/{uid}/{status}','OrderController@resOrder');
     $router->get('meals/{uid}','MealController@reslist');
     $router->post('updatemeal','MealController@update');
     $router->post('addmeal','MealController@store');
     $router->post('delmeal','MealController@delete');
+    $router->get('account/{uid}/{fromdate}/{todate}','OrderController@account');
     
 });
+
+$router->group(['prefix' => 'admins'], function () use ($router) {
+    $router->post('addres','ResController@store');
+    $router->post('addresloc','LocationController@store');
+    $router->get('search/{name}','ResController@search');
+    $router->get('account/{uid}/{fromdate}/{todate}','OrderController@account');
+    
+    
+});
+
+
