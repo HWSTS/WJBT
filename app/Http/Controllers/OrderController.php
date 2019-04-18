@@ -47,7 +47,7 @@ class OrderController extends Controller
         ->orderByRaw('created_at','asc')
         ->take(30)
         ->get();
-        return response()->json($orders,200);
+        return response()->json(['status_code'=>1000,'data'=>$orders,'message'=>null],200);
     }
 
     public function resOrder($uid, $status)
@@ -60,7 +60,7 @@ class OrderController extends Controller
         ->orderByRaw('created_at','asc')
         ->paginate(30);
         
-        return response()->json($orders,200);
+        return response()->json(['status_code'=>1000,'data'=>$orders,'message'=>null],200);
     }
 
     public function account($uid, $fromdate, $todate)
@@ -68,7 +68,7 @@ class OrderController extends Controller
         $account = DB::table('order')
                     ->select(DB::raw('COUNT(order.id) as count, Sum(order.subtotal) as sum'),'status')
                     ->whereBetween('created_at',[$fromdate, $todate])
-                    ->whereIn('status',[1,2,3,4,5])
+                    ->whereIn('status',[0,1,2,3,4,5])
                     ->groupBy('status')
                     ->get();
 
