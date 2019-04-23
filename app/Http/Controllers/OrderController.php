@@ -59,21 +59,29 @@ class OrderController extends Controller
         ->select('order.id','order.oid','order.price','order.qty','order.subtotal','order.status','order.user_location','order.user_number','order.created_at','m.name')
         ->orderByRaw('created_at','asc')
         ->paginate(30);
+      
         
-        return response()->json(['status_code'=>1000,'data'=>$orders,'message'=>null],200);
+        return response()->json(['data'=>$orders],200);
     }
 
     public function account($uid, $fromdate, $todate)
     {
+        // $account = DB::table('order')
+        //             ->select(DB::raw('COUNT(order.id) as count, Sum(order.subtotal) as sum'),'status')
+        //             ->whereBetween('created_at',[$fromdate, $todate])
+        //             ->whereIn('status',[0,1,2,3,4,5])
+        //             ->groupBy('status')
+        //             ->get();
+
         $account = DB::table('order')
-                    ->select(DB::raw('COUNT(order.id) as count, Sum(order.subtotal) as sum'),'status')
-                    ->whereBetween('created_at',[$fromdate, $todate])
-                    ->whereIn('status',[0,1,2,3,4,5])
-                    ->groupBy('status')
+                    ->where('order.res_id','=', $uid)
+                    ->whereBetween('order.created_at',[$fromdate, $todate])
+                    ->join('meal as m','m.meal_id', '=','order.meal_id')
+                     ->select('order.id','order.oid','order.price','order.qty','order.subtotal','order.status','order.user_location','order.user_number','order.created_at','m.name')
+                     ->orderByRaw('created_at','asc')
                     ->get();
 
-
-         return response()->json($account,200);
+         return response()->json(['data'=>$account],200);
 
                     // only response work
                     //resapi/account/24342424/2019-4-6/2019-4-7

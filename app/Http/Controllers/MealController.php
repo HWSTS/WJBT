@@ -68,9 +68,10 @@ class MealController extends Controller
         return response()->json(['status_code'=>1000,'data'=>$meals , 'message'=>null],200);
     }
 
-    public function search($category)
+    public function search($category, $province)
     {
         $meal = Meal::where('category',$category)
+                    ->where('province',$province)
                     ->orderBy('num_orders', 'desc')
                     ->paginate(20);
         return response()->json($meal,200);

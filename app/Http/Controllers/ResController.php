@@ -56,11 +56,11 @@ class ResController extends Controller
     }
 
 
-    public function search($name)
+    public function search(Request $request)
     {
-        $res = Restaurant::where('name', 'like', '%' . $name . '%')
+        $res = Restaurant::where('name', 'like', '%' . $request->name . '%')
                             ->get();
-         return response()->json($res,200);
+         return response()->json(['data'=>$res],200);
     }
 
 }

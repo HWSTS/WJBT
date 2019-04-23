@@ -24,7 +24,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('userorders/{uid}','OrderController@userOrder');
     $router->get('locations/{uid}','LocationController@list');
     $router->get('meals/{province}','MealController@list');
-    $router->get('search/{category}','MealController@search');
+    $router->get('search/{category}/{province}','MealController@search');
     $router->get('resList/{province}','ResController@resList');
     $router->post('addtofav','FavController@store');
     $router->get('myfav/{uid}','FavController@list');
@@ -45,7 +45,7 @@ $router->group(['prefix' => 'resapi'], function () use ($router) {
 $router->group(['prefix' => 'admins'], function () use ($router) {
     $router->post('addres','ResController@store');
     $router->post('addresloc','LocationController@store');
-    $router->get('search/{name}','ResController@search');
+    $router->post('search','ResController@search');
     $router->get('account/{uid}/{fromdate}/{todate}','OrderController@account');
     
     
