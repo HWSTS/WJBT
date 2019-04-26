@@ -20,6 +20,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('login','UserController@login');
     $router->post('signup','UserController@signup');
     $router->post('verfiy','UserController@verfiy');
+    $router->post('updatelocation','UserController@updateLocation');
     $router->post('order','OrderController@store');
     $router->get('userorders/{uid}','OrderController@userOrder');
     $router->get('locations/{uid}','LocationController@list');
@@ -48,8 +49,7 @@ $router->group(['prefix' => 'admins'], function () use ($router) {
     $router->post('addres','ResController@store');
     $router->post('addresloc','LocationController@store');
     $router->post('search','ResController@search');
-    $router->get('account/{uid}/{fromdate}/{todate}','OrderController@account');
-    
+    $router->get('account/{uid}/{fromdate}/{todate}','OrderController@account');  
     
 });
 

@@ -64,15 +64,24 @@ class UserController extends Controller
             if($user->code == $request->code){
             
             
-                return response()->json(['status_code'=>1000,'data'=>[$user->user_id, $user->province] , 'message'=>"Verified"],200);
+                return response()->json(['status_code'=>1000,'data'=>['user_id'=>$user->user_id, 'province'=>$user->province] , 'message'=>"Verified"],200);
             
             
         }else{
             // return wrong code response
-            return response()->json(['status_code'=>2000,'data'=>$user->code , 'message'=>"رمز التفعيل خاطئ ... يرجى التأكد"],200);
+            return response()->json(['status_code'=>2000,'data'=>null , 'message'=>"رمز التفعيل خاطئ ... يرجى التأكد"],200);
         }
         }
         
+    }
+
+    function updateLocation(Request $request){
+        $user = User::where('user_id',$request->user_id)->first();
+        if($user){
+            $user->province = $request->province;
+            $user->save();
+            return response()->json(['status_code'=>1000,'data'=>null , 'message'=>"تم تحديث الموقع"],200);
+        }
     }
 
     function sendSMS(String $contact_number, String $code)

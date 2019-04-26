@@ -29,6 +29,9 @@ class OrderController extends Controller
             return response()->json(['status_code'=>1000,'data'=>null,'message'=>"Can't Update        Delievered Order"],200);
                 
             }else{
+                if($request->status == 2){
+                    $this->sendNotification($order->user_id);
+                }
                 $order->status = $request->status;
                 $order->save();
                 return response()->json(['status_code'=>1000,'data'=>null,'message'=>"Updated Successfully"],200);
@@ -102,6 +105,36 @@ class OrderController extends Controller
     }
 
 
+    public function sendNotification(String $user_id)
+    {
+        $content = array(
+			"en" => 'وجبتك جاهزة و جايتك بالطريق'
+			);
+		
+		$fields = array(
+			'app_id' => "e138640d-d830-4b6c-93e8-1f37c96bf8b7",
+			'include_external_user_ids' => array($user_id),
+			'data' => array("foo" => "bar"),
+			'contents' => $content
+		);
+		
+		$fields = json_encode($fields);
+    
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HEADER, FALSE);
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+		$response = curl_exec($ch);
+		curl_close($ch);
+		
+		//return $response;
+    }
 
     private function generateOID()
     {

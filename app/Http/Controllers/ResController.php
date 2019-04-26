@@ -31,7 +31,7 @@ class ResController extends Controller
         if($res){
             if($res->password == $request->password){
 
-                return response()->json(['status_code'=>1000,'uid'=>$res->res_id,'province'=>$res->province,'message'=>"Logged Successfully"],200);
+                return response()->json(['status_code'=>1000,'data'=>['user_id'=>$res->res_id, 'province'=>$res->province],'message'=>"Logged Successfully"],200);
 
             }else{
 
@@ -45,6 +45,7 @@ class ResController extends Controller
         }
     }
 
+
     public function resList($province){
 
         $resList = DB::table('restaurant')
@@ -53,6 +54,7 @@ class ResController extends Controller
                      ->paginate(20);
         return response()->json($resList,200);
     }
+
 
 
     public function search(Request $request)
