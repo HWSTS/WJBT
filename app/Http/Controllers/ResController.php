@@ -50,8 +50,7 @@ class ResController extends Controller
         $resList = DB::table('restaurant')
                      ->where('restaurant.province','=', $province)
                     ->select('restaurant.res_id','restaurant.name','restaurant.open_time','restaurant.img_url',DB::raw('(select count(meal.id) from meal where meal.res_id = restaurant.res_id) as mealNum'))
-                  ->orderByRaw('RAND()')
-                     ->paginate(5);
+                     ->paginate(20);
         return response()->json($resList,200);
     }
 

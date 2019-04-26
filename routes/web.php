@@ -34,10 +34,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 $router->group(['prefix' => 'resapi'], function () use ($router) {
     $router->post('login','ResController@login');
     $router->get('orders/{uid}/{status}','OrderController@resOrder');
+    $router->get('penorders/{uid}','OrderController@penOrders');
     $router->get('meals/{uid}','MealController@reslist');
     $router->post('updatemeal','MealController@update');
     $router->post('addmeal','MealController@store');
     $router->post('delmeal','MealController@delete');
+    $router->post('updateorder','OrderController@update');
     $router->get('account/{uid}/{fromdate}/{todate}','OrderController@account');
     
 });

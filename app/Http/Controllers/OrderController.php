@@ -21,16 +21,17 @@ class OrderController extends Controller
     }
 
 
-    function update(Request $request, $id)
+    function update(Request $request)
     {
-        $order = Order::where('id',$id)->first();
+        $order = Order::where('id',$request->id)->first();
         if($order){
-            if(!$order->status == 4){
-                $order->status == $request->status;
+             if($order->status == 3){
+            return response()->json(['status_code'=>1000,'data'=>null,'message'=>"Can't Update        Delievered Order"],200);
+                
+            }else{
+                $order->status = $request->status;
                 $order->save();
                 return response()->json(['status_code'=>1000,'data'=>null,'message'=>"Updated Successfully"],200);
-            }else{
-                return response()->json(['status_code'=>1000,'data'=>null,'message'=>"Can't Update Delievered Order"],200);
             }
             
         }
@@ -58,7 +59,23 @@ class OrderController extends Controller
         ->join('meal as m','m.meal_id', '=','order.meal_id')
         ->select('order.id','order.oid','order.price','order.qty','order.subtotal','order.status','order.user_location','order.user_number','order.created_at','m.name')
         ->orderByRaw('created_at','asc')
-        ->paginate(30);
+        ->get();
+      
+        
+        return response()->json(['data'=>$orders],200);
+    }
+
+
+    public function penOrders($uid)
+    {
+        $orders = DB::table('order')
+        ->where('order.res_id','=', $uid)
+        ->where('order.status','=', 1)
+        ->orWhere('order.status','=', 2)
+        ->join('meal as m','m.meal_id', '=','order.meal_id')
+        ->select('order.id','order.oid','order.price','order.qty','order.subtotal','order.status','order.user_location','order.user_number','order.created_at','m.name')
+        ->orderByRaw('created_at','asc')
+        ->get();
       
         
         return response()->json(['data'=>$orders],200);
@@ -82,9 +99,6 @@ class OrderController extends Controller
                     ->get();
 
          return response()->json(['data'=>$account],200);
-
-                    // only response work
-                    //resapi/account/24342424/2019-4-6/2019-4-7
     }
 
 
